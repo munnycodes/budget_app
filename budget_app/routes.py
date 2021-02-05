@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash
 from budget_app import app, db, bcrypt
-from budget_app.forms import RegistrationForm, LoginForm
-from budget_app.models import User, Budget 
+from budget_app.forms import RegistrationForm, LoginForm, ExpenseForm
+from budget_app.models import User #Budget 
 from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route('/')
@@ -9,6 +9,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route('/index')
 def index():
     return render_template('index.html')
+
 
 @app.route('/posts', methods=['GET', 'POST'])
 def posts():
@@ -56,6 +57,22 @@ def login():
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
+
+
+
+@app.route("/expense/new", methods=['GET', 'POST'])
+@login_required
+def new_expense():
+    form = ExpenseForm()
+    if form.validate_on_submit():
+        flash('Expense successfully submitted.', 'success')
+        return redirect(url_for('index'))
+    return render_template('new_expense.html', title='New Expense', form=form)
+
+@app.route('/account')
+@login_required
+def account():
+    return render_template('account.html', title='Account')
 
 @app.route("/logout")
 def logout():

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms.fields.html5 import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField, DateField, DateTimeField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from budget_app.models import User
 
@@ -31,5 +31,13 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=30)])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+class ExpenseForm(FlaskForm):
+    expense = StringField('Expense', validators=[DataRequired()])
+    expense_type = SelectField(u'Expense Type', choices=[('housing', 'Housing'), ('food', 'Food'), ('transport', 'Transportation'), ('bills', 'Bills'),('entertainment', 'Entertainment'),('investments', 'Investments'),('misc','Miscellaneous'), ('groceries', 'Groceries')], validators=[DataRequired()])
+    cost = IntegerField('Cost', validators=[DataRequired()])
+    date = DateField('Date of Expense', format='%y/%m/%d', validators=[DataRequired()])
+    submit = SubmitField('Submit Expense')
+
 
 
