@@ -1,14 +1,18 @@
-from flask import render_template, request, redirect, url_for, flash
+import os
+import secrets
+from flask import render_template, request, redirect, url_for, flash, session 
 from budget_app import app, db, bcrypt
 from budget_app.forms import RegistrationForm, LoginForm, ExpenseForm
-from budget_app.models import User #Budget 
+from budget_app.models import User, Expense 
 from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route('/')
 @app.route('/home')
 @app.route('/index')
 def index():
+    expense = Expense.query.all()
     return render_template('index.html')
+
 
 
 @app.route('/posts', methods=['GET', 'POST'])
@@ -53,6 +57,7 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
+            session["user_id"] = user.id
             return redirect(next_page) if next_page else redirect(url_for('index'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
@@ -65,6 +70,11 @@ def login():
 def new_expense():
     form = ExpenseForm()
     if form.validate_on_submit():
+
+        expense = Expense(vendor=form.expense.data, expense_type=form.expense_type.data, cost=form.cost.data, date_posted=form.date.data, user_id=session["user_id"])
+        db.session.add(expense)
+        db.session.commit()
+        print(Expense.query.all())
         flash('Expense successfully submitted.', 'success')
         return redirect(url_for('index'))
     return render_template('new_expense.html', title='New Expense', form=form)
