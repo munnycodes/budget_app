@@ -14,7 +14,7 @@ def index():
     return render_template('index.html')
 
 # @app.route('/start')
-# def index():
+# def start():
 #     return render_template('start.html')
 
 
