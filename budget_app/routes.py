@@ -13,6 +13,10 @@ def index():
     expense = Expense.query.all()
     return render_template('index.html')
 
+# @app.route('/start')
+# def index():
+#     return render_template('start.html')
+
 
 
 @app.route('/posts', methods=['GET', 'POST'])
@@ -74,7 +78,6 @@ def new_expense():
         expense = Expense(vendor=form.expense.data, expense_type=form.expense_type.data, cost=form.cost.data, date_posted=form.date.data, user_id=session["user_id"])
         db.session.add(expense)
         db.session.commit()
-        print(Expense.query.all())
         flash('Expense successfully submitted.', 'success')
         return redirect(url_for('index'))
     return render_template('new_expense.html', title='New Expense', form=form)
