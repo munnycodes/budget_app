@@ -10,12 +10,15 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route('/home')
 @app.route('/index')
 def index():
-    expense = Expense.query.all()
+
     return render_template('index.html')
 
-# @app.route('/start')
-# def start():
-#     return render_template('start.html')
+@app.route('/start')
+def start():
+    headings = ("Expense", "Expense_Type", "Cost", "Date")
+    expenses = Expense.query.all()
+    print(expenses)
+    return render_template('start.html', expenses=expenses, headings=headings)
 
 
 
@@ -54,7 +57,7 @@ def register():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('start'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -62,7 +65,7 @@ def login():
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             session["user_id"] = user.id
-            return redirect(next_page) if next_page else redirect(url_for('index'))
+            return redirect(next_page) if next_page else redirect(url_for('start'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -78,8 +81,9 @@ def new_expense():
         expense = Expense(vendor=form.expense.data, expense_type=form.expense_type.data, cost=form.cost.data, date_posted=form.date.data, user_id=session["user_id"])
         db.session.add(expense)
         db.session.commit()
+        session["expense_id"] = expense.id
         flash('Expense successfully submitted.', 'success')
-        return redirect(url_for('index'))
+        return redirect(url_for('start'))
     return render_template('new_expense.html', title='New Expense', form=form)
 
 @app.route('/account')

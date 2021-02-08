@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Home</title> 
+{% endblock %}
+
+{% block body %}
+    <h1>{{current_user.username}}'s Dashboard </h1>
+    <h3>You make the money, we'll handle the rest.</h3>
+    <table>
+        <tr>
+            {% for header in headings %}
+            <th>{{ header }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in expenses %}
+        <td>{{ row }}</td>
+        <!-- <tr>
+            {% for cell in data %}
+            <td>{{ cell }}</td>
+            {% endfor %}
+        </tr> -->
+        {% endfor %}
+    </table>
+
+{% endblock %}

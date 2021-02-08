@@ -27,7 +27,7 @@ class Expense(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
     def __repr__(self):
-        return f"User('{self.username}', {self.email}"
+        return f"('vendor', {self.vendor}), ('expense_type', {self.expense_type}), ('cost', {self.cost}), ('date_posted', {self.date_posted})"
 
 
 # class Budget(db.Model):
