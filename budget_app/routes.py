@@ -15,7 +15,7 @@ def index():
 
 @app.route('/start')
 def start():
-    headings = ("Expense", "Expense_Type", "Cost", "Date")
+    headings = ("Expense", "Expense Type", "Cost", "Date Posted")
     expenses = Expense.query.all()
     print(expenses)
     return render_template('start.html', expenses=expenses, headings=headings)
