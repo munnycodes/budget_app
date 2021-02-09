@@ -1,0 +1,21 @@
+.table {
+    border-spacing: 0;
+    margin: 1rem;
+    background-color: darkgreen;
+}
+
+.table__row:nth-child(even) {
+    background-color: aliceblue;
+}
+
+.table__row:nth-child(odd) {
+    background-color: rgb(207, 230, 180);
+}
+
+.table__header {
+    text-align: left;
+}
+
+.table__cell {
+    padding: 8px;
+}

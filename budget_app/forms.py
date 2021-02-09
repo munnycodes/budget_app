@@ -40,5 +40,12 @@ class ExpenseForm(FlaskForm):
     date = DateField('Date of Expense (yy/mm/dd)', format='%y/%m/%d', validators=[DataRequired()])
     submit = SubmitField('Submit Expense')  
 
+class UpdateExpenseForm(FlaskForm):
+    expense = StringField('Expense', validators=[DataRequired()])
+    expense_type = SelectField(u'Expense Type', choices=[('housing', 'Housing'), ('food', 'Food'), ('transport', 'Transportation'), ('bills', 'Bills'),('entertainment', 'Entertainment'),('investments', 'Investments'),('misc','Miscellaneous'), ('groceries', 'Groceries')], validators=[DataRequired()])
+    cost = IntegerField('Cost', validators=[DataRequired()])
+    date = DateField('Date of Expense (yy/mm/dd)', format='%y/%m/%d', validators=[DataRequired()])
+    submit = SubmitField('Submit Expense')  
+
 
 

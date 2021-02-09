@@ -2,25 +2,33 @@
 
 {% block head %}
 <title>Home</title> 
+<link rel="stylesheet" href="/static/styles.css" />
 {% endblock %}
 
 {% block body %}
     <h1>{{current_user.username}}'s Dashboard </h1>
     <h3>You make the money, we'll handle the rest.</h3>
-    <table>
-        <tr>
+
+    <table class="table">
+        <tr class="table__header">
+
         {% for header in headings %}
-        <th>{{ header }}</th>
+        <th class="table__cell">{{ header }}</th>
         {% endfor %}
+        <td class="table__cell"><h6>Update Expense</h6>
+        </td>
         </tr>
-        {% for row in expenses %}
-        <td>{{ row }}</td>
-        <!-- <tr>
-            {% for cell in data %}
-            <td>{{ cell }}</td>
-            {% endfor %}
-        </tr> -->
+        <tr class="table__row">
+        {% for item in expenses %}
+            <td class= "table__cell">{{ item.vendor }}</td>
+            <td class= "table__cell">{{ item.expense_type }}</td>
+            <td class= "table__cell">{{ item.cost }}</td>
+            <td class= "table__cell">{{ item.date_posted.strftime('%Y-%m-%d') }}</td>
+            <td> <a href="{{ url_for('expense', expense_id=item.id) }}">Update Expense</a></td>
+
+        </tr>
         {% endfor %}
+
     </table>
 
 {% endblock %}
