@@ -50,7 +50,7 @@ def login():
 @login_required
 def start():
     
-    headings = ("Ex Id", "Expense", "Expense Type", "Cost", "Date Posted")
+    headings = ("Expense", "Expense Type", "Cost", "Date Posted", "Total Cost")
     expenses = Expense.query.filter_by(user_id = session["user_id"])
 
     return render_template('start.html', expenses=expenses, headings=headings)
@@ -60,14 +60,16 @@ def start():
 @app.route("/expense/new", methods=['GET', 'POST'])
 @login_required
 def new_expense():
+    user = User.query.get_or_404(current_user.id)
     form = ExpenseForm()
     if form.validate_on_submit():
 
         expense = Expense(vendor=form.expense.data, expense_type=form.expense_type.data, cost=form.cost.data, date_posted=form.date.data, user_id=session["user_id"])
-        print(type(form.date.data))
         db.session.add(expense)
+        user.total_cost += form.cost.data
         db.session.commit()
-        session["expense_id"] = expense.id
+        
+
         flash('Expense successfully submitted.', 'success')
         return redirect(url_for('start'))
     return render_template('new_expense.html', title='New Expense', form=form)
@@ -76,6 +78,7 @@ def new_expense():
 @app.route("/expense/<int:expense_id>", methods=['GET', 'POST'])
 @login_required
 def expense(expense_id):
+    user = User.query.get_or_404(current_user.id)
     expense = Expense.query.get_or_404(expense_id)
     form = UpdateExpenseForm()
     if form.validate_on_submit():
@@ -85,6 +88,8 @@ def expense(expense_id):
         expense.cost = form.cost.data 
         expense.date_posted = form.date.data 
         expense.user_id = session["user_id"]
+        user.total_cost += expense.cost
+        print(user.total_cost)
         db.session.commit()
         flash('Expense successfully updated.', 'success')
     
