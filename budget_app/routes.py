@@ -49,11 +49,16 @@ def login():
 @app.route('/start')
 @login_required
 def start():
-    
+    expenseData = Expense.query.filter_by(user_id = session["user_id"])
+    totalSpend = []
+    for cost in expenseData:
+        i = cost.cost
+        totalSpend.append(i)
+    totalSpend = sum(totalSpend)
     headings = ("Expense", "Expense Type", "Cost", "Date Posted", "Total Cost")
     expenses = Expense.query.filter_by(user_id = session["user_id"])
 
-    return render_template('start.html', expenses=expenses, headings=headings)
+    return render_template('start.html', expenseData=expenseData, totalSpend=totalSpend, expenses=expenses, headings=headings)
 
 
 

@@ -8,7 +8,7 @@
 {% block body %}
     
     <h1>{{current_user.username}}'s Dashboard </h1>
-    <h3>You make the money, we'll handle the rest.</h3>
+    <h3>Total spend so far {{ totalSpend }}</h3>
 
     <table class="table">
         <tr class="table__header">
@@ -25,7 +25,6 @@
             <td class= "table__cell">{{ item.expense_type }}</td>
             <td class= "table__cell">{{ item.cost }}</td>
             <td class= "table__cell">{{ item.date_posted.strftime('%Y-%m-%d') }}</td>
-            <td class= "table_cell">{{ current_user.total_cost }}</td>
             <td> <a href="{{ url_for('expense', expense_id=item.id) }}">Update Expense</a></td>
 
         </tr>
