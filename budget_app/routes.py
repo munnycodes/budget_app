@@ -1,6 +1,6 @@
 import os
 import secrets
-from flask import render_template, request, redirect, url_for, flash, session 
+from flask import render_template, request, redirect, url_for, flash, session, abort
 from budget_app import app, db, bcrypt
 from budget_app.forms import RegistrationForm, LoginForm, ExpenseForm, UpdateExpenseForm
 from budget_app.models import User, Expense 
@@ -55,7 +55,7 @@ def start():
         i = cost.cost
         totalSpend.append(i)
     totalSpend = sum(totalSpend)
-    headings = ("Expense", "Expense Type", "Cost", "Date Posted", "Total Cost")
+    headings = ("Expense", "Expense Type", "Cost", "Date Posted")
     expenses = Expense.query.filter_by(user_id = session["user_id"])
 
     return render_template('start.html', expenseData=expenseData, totalSpend=totalSpend, expenses=expenses, headings=headings)
@@ -89,7 +89,7 @@ def expense(expense_id):
     if form.validate_on_submit():
        
         expense.vendor = form.expense.data
-        expense.expense_type = form.expense.data
+        expense.expense_type = form.expense_type.data
         expense.cost = form.cost.data 
         expense.date_posted = form.date.data 
         expense.user_id = session["user_id"]
@@ -109,6 +109,23 @@ def expense(expense_id):
         session["user_id"] = expense.user_id  
         
     return render_template('expense.html', title='Expense', expense=expense, form=form)
+
+@app.route("/expense/delete/<int:expense_id>", methods=['POST'])
+@login_required
+def delete_expense(expense_id):
+    user = User.query.get_or_404(current_user.id)
+    expense = Expense.query.get_or_404(expense_id)
+    expenses = Expense.query.filter_by(user_id = session["user_id"])
+
+    try:
+        db.session.delete(expense_id)
+        db.session.commit()
+        flash ('Your expense has been deleted.')
+        return render_template('start.html', expense=expense, expenses=expenses, user=user)
+
+    except:
+        return 'There was an error deleting that expense.'
+        
 
 
 @app.route('/account')

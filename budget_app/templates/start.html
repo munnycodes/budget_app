@@ -7,7 +7,7 @@
 
 {% block body %}
     
-    <h1>{{current_user.username}}'s Dashboard </h1>
+    <h1>{{current_user.username.title()}}'s Dashboard </h1>
     <h3>Total spend so far {{ totalSpend }}</h3>
 
     <table class="table">

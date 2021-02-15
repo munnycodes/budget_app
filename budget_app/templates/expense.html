@@ -3,33 +3,18 @@
 {% block head %}
 <title>Home</title> 
 <link rel="stylesheet" href="/static/styles.css" />
+
 {% endblock %}
 
 {% block body %}
-{% if current_user.is_authenticated %}
-
     
-    <h1>{{current_user.username}}'s Dashboard </h1>
+    <h1>{{current_user.username.title()}}'s Dashboard </h1>
     <h3>You make the money, we'll handle the rest.</h3>
+    <h1>{{ expense.id }}</h1>
+              
+                
 
-    <table class="table">
-        <tr class="table__header">
 
-        {% for header in headings %}
-        <th class="table__cell">{{ header }}</th>
-        {% endfor %}
-        <td class="table__cell"><h6>Update Expense</h6>
-        </td>
-        </tr>
-        <tr class="table__row">
-        
-            <td class= "table__cell">{{ expense.vendor }}</td>
-            <td class= "table__cell">{{ expense.expense_type }}</td>
-            <td class= "table__cell">{{ expense.cost }}</td>
-            <td class= "table__cell">{{ expense.date_posted.strftime('%Y-%m-%d') }}</td>
-            
-
-        </tr>
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
@@ -90,16 +75,16 @@
                 </div>
             </fieldset>
             <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
-            </div>
-            <small class="text-muted ml-2">
-                
-    
-        </form>
-        
-        
 
-    </table>
-{% endif %}
+                {{ form.submit(class="btn btn-outline-info") }}
+                <form action="{{ url_for('delete_expense', expense_id=expense.id) }}" method="POST">
+                    <input class="btn btn-danger" type="submit" value="Delete">
+                </form>   
+               
+
+            </div>
+        </form>
+
+
 
 {% endblock %}
