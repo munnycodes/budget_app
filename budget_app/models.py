@@ -30,7 +30,7 @@ class Expense(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
     def __repr__(self):
-        return f"('user_id', {self.user_id}), ('vendor', {self.vendor}), ('expense_type', {self.expense_type}), ('cost', {self.cost}), ('date_posted', {self.strptime(date_posted,'%y/%m/%d')})"
+        return f"Expense ('user_id', {self.user_id}), ('vendor', {self.vendor}), ('expense_type', {self.expense_type}), ('cost', {self.cost}), ('date_posted', {self.date_posted,'%d/%m/%y'})"
 
 
 # class Budget(db.Model):

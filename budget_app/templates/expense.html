@@ -75,15 +75,20 @@
                 </div>
             </fieldset>
             <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}    
+                <form action="{{ url_for('delete_expense', expense_id=expense.id) }}" action="DELETE">
+                    <button formmethod="DELETE" formaction="{{ url_for('delete_expense', expense_id=expense.id) }}" input class="btn btn-danger" type="submit" value="Delete">Delete</button>
 
-                {{ form.submit(class="btn btn-outline-info") }}
-                <form action="{{ url_for('delete_expense', expense_id=expense.id) }}" method="POST">
-                    <input class="btn btn-danger" type="submit" value="Delete">
+                </form>  
+
                 </form>   
+
                
 
             </div>
+
         </form>
+
 
 
 

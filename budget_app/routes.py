@@ -2,9 +2,28 @@ import os
 import secrets
 from flask import render_template, request, redirect, url_for, flash, session, abort
 from budget_app import app, db, bcrypt
-from budget_app.forms import RegistrationForm, LoginForm, ExpenseForm, UpdateExpenseForm
+from budget_app.forms import RegistrationForm, LoginForm, ExpenseForm, UpdateExpenseForm, GetDateRange
 from budget_app.models import User, Expense 
 from flask_login import login_user, current_user, logout_user, login_required
+from oauthlib.oauth2 import WebApplicationClient
+from flask_dance.contrib.github import make_github_blueprint, github
+import datetime
+
+blueprint = make_github_blueprint(
+    client_id="f30ba312b07a839ca9f7",
+    client_secret="907f4bdfc0bdaf41690d8dbc95991ddca46b6b32",
+)
+
+app.register_blueprint(blueprint, url_prefix="/github_login")
+
+@app.route("/login/g")
+def github_login():
+    if not github.authorized:
+        return redirect(url_for("github.login"))
+    resp = github.get("/user")
+    assert resp.ok
+    return "You are @{login} on GitHub".format(login=resp.json()["login"])
+
 
 @app.route('/')
 @app.route('/home')
@@ -46,19 +65,30 @@ def login():
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
 
-@app.route('/start')
+@app.route('/start', methods=['GET', 'POST'])
 @login_required
 def start():
+    startdate = request.args.get('startdate')
+    enddate = request.args.get('enddate')
+    if startdate == None:
+        startdate = datetime.date.min
+    if enddate == None:
+        enddate = datetime.date.max
+
     expenseData = Expense.query.filter_by(user_id = session["user_id"])
     totalSpend = []
+    form = GetDateRange()
+
+    if form.validate_on_submit():
+        flash ('Yay', 'success')
     for cost in expenseData:
         i = cost.cost
         totalSpend.append(i)
     totalSpend = sum(totalSpend)
-    headings = ("Expense", "Expense Type", "Cost", "Date Posted")
+    headings = ("Expense", "Expense Type", "Cost", "Date Posted", "Delete")
     expenses = Expense.query.filter_by(user_id = session["user_id"])
 
-    return render_template('start.html', expenseData=expenseData, totalSpend=totalSpend, expenses=expenses, headings=headings)
+    return render_template('start.html', expenseData=expenseData, totalSpend=totalSpend, expenses=expenses, headings=headings, form=form)
 
 
 
@@ -94,7 +124,6 @@ def expense(expense_id):
         expense.date_posted = form.date.data 
         expense.user_id = session["user_id"]
         user.total_cost += expense.cost
-        print(user.total_cost)
         db.session.commit()
         flash('Expense successfully updated.', 'success')
     
@@ -110,18 +139,16 @@ def expense(expense_id):
         
     return render_template('expense.html', title='Expense', expense=expense, form=form)
 
-@app.route("/expense/delete/<int:expense_id>", methods=['POST'])
+@app.route("/expense/delete/<int:expense_id>", methods=['GET', 'DELETE'])
 @login_required
 def delete_expense(expense_id):
-    user = User.query.get_or_404(current_user.id)
     expense = Expense.query.get_or_404(expense_id)
     expenses = Expense.query.filter_by(user_id = session["user_id"])
-
     try:
-        db.session.delete(expense_id)
+        db.session.delete(expense)
         db.session.commit()
         flash ('Your expense has been deleted.')
-        return render_template('start.html', expense=expense, expenses=expenses, user=user)
+        return redirect(url_for('start'))
 
     except:
         return 'There was an error deleting that expense.'

@@ -2,10 +2,36 @@
 
 {% block head %}
 <title>Home</title> 
+<style>
+h1 {text-align: center;}
+h3 {text=align: center;}
+p {text-align: center;}
+div {text-align: center;}
+
+.block {
+  display: inline-block;
+  width: 175px;
+  height: 175px;
+  border-radius: 25px;
+  background-color: rgb(19, 185, 60);
+  margin: 35px
+}
+.container  {
+  text-align: center;
+}
+</style>
 {% endblock %}
 
 {% block body %}
 <h1>Munny Money</h1>
 <h3>You make the money, we'll handle the rest.</h3>
+{% if current_user.is_authenticated %}
+<div class="container">
+    <div class="block"><h2 style="color:white">Latest Spend <br>  </h2></div>
+    <div class="block" style="color:blue"><h2 style="color:white">Last 30 days</h2></div>
+    <div class="block" style="color:darkred"><h2 style="color:white">Last 12 months</h2></div>
+</div>
+
 <img src="{{url_for('static', filename='munitaly.jpg')}}" align="middle" />
+{% endif %}
 {% endblock %}

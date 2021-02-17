@@ -3,12 +3,51 @@
 {% block head %}
 <title>Home</title> 
 <link rel="stylesheet" href="/static/styles.css" />
+<style>
+    h1 {text-align: center;}
+    h3 {text=align: center;}
+    p {text-align: center;}
+    div {text-align: center;}
+    
+    .block {
+      display: inline-block;
+      width: 175px;
+      height: 175px;
+      border-radius: 25px;
+      background-color: rgb(19, 185, 60);
+      margin: 8px
+    }
+    .container  {
+      text-align: center;
+    }
+    </style>
 {% endblock %}
 
 {% block body %}
     
     <h1>{{current_user.username.title()}}'s Dashboard </h1>
-    <h3>Total spend so far {{ totalSpend }}</h3>
+    <h3>Total spend so far </h3>
+    {% if current_user.is_authenticated %}
+    
+<div class="container">
+    <div class="block" style="color:blue"><h2 style="color:white"><strong>Last 30 days: </strong><hr>£{{ totalSpend }}</h2></div>
+    <div class="block" style="color:white"><h2 style="color:white"><strong>Lifetime Spend: </strong> <hr> £{{ totalSpend }}  </h2></div>
+    <div class="block" style="color:darkred"><h2 style="color:white"><strong>Last 12 months: </strong><hr>£{{ totalSpend }}</h2></div>
+    <br>
+    <div class="block" style="color:darkred">
+        <h2 style="color:white">
+            <strong>Spend Between </strong><hr>£{{ totalSpend }}</h2></div>
+    <form action="#">
+        <label for="startdate">Start date:</label>
+        <input type="date" id="startdate" name="startdate">
+        <label for="enddate"> End date :</label>
+        <input type="date" id="enddate" name="enddate">
+        <input type="submit">
+    </form>
+</div>
+
+
+    {% endif %}
 
     <table class="table">
         <tr class="table__header">
@@ -24,8 +63,10 @@
             <td class= "table__cell">{{ item.vendor }}</td>
             <td class= "table__cell">{{ item.expense_type }}</td>
             <td class= "table__cell">{{ item.cost }}</td>
-            <td class= "table__cell">{{ item.date_posted.strftime('%Y-%m-%d') }}</td>
+            <td class= "table__cell">{{ item.date_posted.strftime('%d-%m-%Y') }}</td>
+            <td> <a href="{{ url_for('delete_expense', expense_id=item.id) }}"> Delete <img border="5" alt="Delete Expense" src="{{url_for('static', filename='garbage_can.png')}}" width="25" height="25"></a></td>
             <td> <a href="{{ url_for('expense', expense_id=item.id) }}">Update Expense</a></td>
+
 
         </tr>
         {% endfor %}
