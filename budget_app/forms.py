@@ -3,6 +3,7 @@ from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField, DateField, DateTimeField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from budget_app.models import User, Expense
+from wtforms.fields.html5 import DateField
 
 
 class RegistrationForm(FlaskForm):

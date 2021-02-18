@@ -1,20 +1,13 @@
 {% extends 'base.html' %}
-
 {% block head %}
 <title>Home</title> 
 <link rel="stylesheet" href="/static/styles.css" />
-
 {% endblock %}
-
 {% block body %}
-    
     <h1>{{current_user.username.title()}}'s Dashboard </h1>
     <h3>You make the money, we'll handle the rest.</h3>
     <h1>{{ expense.id }}</h1>
-              
-                
-
-
+    {% if current_user.is_authenticated %}
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
@@ -91,5 +84,5 @@
 
 
 
-
+    {% endif %}
 {% endblock %}

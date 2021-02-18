@@ -68,27 +68,58 @@ def login():
 @app.route('/start', methods=['GET', 'POST'])
 @login_required
 def start():
-    startdate = request.args.get('startdate')
-    enddate = request.args.get('enddate')
-    if startdate == None:
-        startdate = datetime.date.min
-    if enddate == None:
-        enddate = datetime.date.max
 
     expenseData = Expense.query.filter_by(user_id = session["user_id"])
+    print(expenseData)
     totalSpend = []
     form = GetDateRange()
+    
+    flag = False
 
     if form.validate_on_submit():
-        flash ('Yay', 'success')
+        startdate = form.startdate.data.strftime('%Y-%m-%d')
+        enddate = form.enddate.data.strftime('%Y-%m-%d')
+        startdate = datetime.datetime.strptime(startdate, '%Y-%m-%d')
+        enddate = datetime.datetime.strptime(enddate, '%Y-%m-%d')
+
+        if enddate < startdate:
+            flash ('End date should be after start date.', 'danger')
+            return redirect(url_for('start'))
+        
+        flag = True
+
+
+    current_date = datetime.date.today()
+    current_month = current_date.month
+    current_year = current_date.year
+    spend_this_month = 0
+    spend_this_year = 0
+    spend = 0
     for cost in expenseData:
         i = cost.cost
         totalSpend.append(i)
+        year = (cost.date_posted.year)  
+        month = (cost.date_posted.month)
+
+        if flag:
+
+            if startdate <= cost.date_posted <= enddate:
+                spend += cost.cost
+                
+
+        if year == current_year:
+            spend_this_year += cost.cost
+            if month == current_month:
+                spend_this_month += cost.cost
+
+    
+        
+        
     totalSpend = sum(totalSpend)
     headings = ("Expense", "Expense Type", "Cost", "Date Posted", "Delete")
     expenses = Expense.query.filter_by(user_id = session["user_id"])
-
-    return render_template('start.html', expenseData=expenseData, totalSpend=totalSpend, expenses=expenses, headings=headings, form=form)
+  
+    return render_template('start.html', expenseData=expenseData, totalSpend=totalSpend, expenses=expenses, headings=headings, form=form, spend_this_month=spend_this_month, spend_this_year=spend_this_year, spend=spend)
 
 
 
@@ -115,6 +146,11 @@ def new_expense():
 def expense(expense_id):
     user = User.query.get_or_404(current_user.id)
     expense = Expense.query.get_or_404(expense_id)
+    print(current_user.id)
+    print(expense.user.id)
+    if current_user.id != expense.user.id:
+        abort(403)
+
     form = UpdateExpenseForm()
     if form.validate_on_submit():
        

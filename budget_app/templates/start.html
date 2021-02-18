@@ -30,20 +30,52 @@
     {% if current_user.is_authenticated %}
     
 <div class="container">
-    <div class="block" style="color:blue"><h2 style="color:white"><strong>Last 30 days: </strong><hr>£{{ totalSpend }}</h2></div>
+    <div class="block" style="color:blue"><h2 style="color:white"><strong>Expense this month: </strong><hr>£{{ spend_this_month }}</h2></div>
     <div class="block" style="color:white"><h2 style="color:white"><strong>Lifetime Spend: </strong> <hr> £{{ totalSpend }}  </h2></div>
-    <div class="block" style="color:darkred"><h2 style="color:white"><strong>Last 12 months: </strong><hr>£{{ totalSpend }}</h2></div>
+    <div class="block" style="color:darkred"><h2 style="color:white"><strong>Spend this year: </strong><hr>£{{ spend_this_year }}</h2></div>
     <br>
     <div class="block" style="color:darkred">
         <h2 style="color:white">
-            <strong>Spend Between </strong><hr>£{{ totalSpend }}</h2></div>
-    <form action="#">
-        <label for="startdate">Start date:</label>
-        <input type="date" id="startdate" name="startdate">
-        <label for="enddate"> End date :</label>
-        <input type="date" id="enddate" name="enddate">
-        <input type="submit">
-    </form>
+            <strong>Spend Between </strong><hr>£{{ spend }}</h2></div>
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Submit Dates</legend>
+                    <div class="row">
+                    <div class="form-group col-sm-4">
+                        {{ form.startdate.label(class="form-control-label") }}
+                        {% if form.startdate.errors %}
+                            {{ form.startdate(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.startdate.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.startdate(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group col-sm-4">
+                        {{ form.enddate.label(class="form-control-label") }}
+                        {% if form.enddate.errors %}
+                            {{ form.enddate(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.enddate.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.enddate(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                    
+                </fieldset>
+                <div class="form-group col-sm-4">
+                    {{ form.submit(class="btn btn-outline-info") }}
+                </div>
+                </div>
+            </form>
 </div>
 
 
