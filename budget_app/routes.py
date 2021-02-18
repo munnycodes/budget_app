@@ -2,8 +2,7 @@ import os
 import secrets
 from flask import render_template, request, redirect, url_for, flash, session, abort
 from budget_app import app, db, bcrypt
-from budget_app.forms import RegistrationForm, LoginForm, ExpenseForm, UpdateExpenseForm 
-from budget_app.daterange import GetDateRange
+from budget_app.forms import RegistrationForm, LoginForm, ExpenseForm, UpdateExpenseForm, GetDateRange
 from budget_app.models import User, Expense 
 from flask_login import login_user, current_user, logout_user, login_required
 from oauthlib.oauth2 import WebApplicationClient
@@ -129,9 +128,11 @@ def start():
 def new_expense():
     user = User.query.get_or_404(current_user.id)
     form = ExpenseForm()
+      
     if form.validate_on_submit():
-
-        expense = Expense(vendor=form.expense.data, expense_type=form.expense_type.data, cost=form.cost.data, date_posted=form.date.data, user_id=session["user_id"])
+        dateposted = form.date.data.strftime('%Y-%m-%d')
+        dateposted = datetime.datetime.strptime(dateposted, '%Y-%m-%d')
+        expense = Expense(vendor=form.expense.data, expense_type=form.expense_type.data, cost=form.cost.data, date_posted=dateposted, user_id=session["user_id"])
         db.session.add(expense)
         user.total_cost += form.cost.data
         db.session.commit()
@@ -154,11 +155,13 @@ def expense(expense_id):
 
     form = UpdateExpenseForm()
     if form.validate_on_submit():
+        dateposted = form.date.data.strftime('%Y-%m-%d')
+        dateposted = datetime.datetime.strptime(dateposted, '%Y-%m-%d')
        
         expense.vendor = form.expense.data
         expense.expense_type = form.expense_type.data
         expense.cost = form.cost.data 
-        expense.date_posted = form.date.data 
+        expense.date_posted = dateposted
         expense.user_id = session["user_id"]
         user.total_cost += expense.cost
         db.session.commit()
