@@ -9,21 +9,6 @@ from oauthlib.oauth2 import WebApplicationClient
 from flask_dance.contrib.github import make_github_blueprint, github
 import datetime
 
-blueprint = make_github_blueprint(
-    client_id="f30ba312b07a839ca9f7",
-    client_secret="907f4bdfc0bdaf41690d8dbc95991ddca46b6b32",
-)
-
-app.register_blueprint(blueprint, url_prefix="/github_login")
-
-@app.route("/login/g")
-def github_login():
-    if not github.authorized:
-        return redirect(url_for("github.login"))
-    resp = github.get("/user")
-    assert resp.ok
-    return "You are @{login} on GitHub".format(login=resp.json()["login"])
-
 
 @app.route('/')
 @app.route('/home')
