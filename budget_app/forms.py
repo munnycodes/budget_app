@@ -50,8 +50,8 @@ class UpdateExpenseForm(FlaskForm):
 
 
 class GetDateRange(FlaskForm):
-    startdate = DateField('startdate',format='%Y-%m-%d')
-    enddate = DateField('enddate',format='%Y-%m-%d')
+    startdate = DateField('Start Date',format='%Y-%m-%d')
+    enddate = DateField('End Date',format='%Y-%m-%d')
     submit = SubmitField('Enter Dates')  
 
 

@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="/static/styles.css" />
 <style>
     h1 {text-align: center;}
-    h3 {text=align: center;}
+    h3 {text-align: center;}
     p {text-align: center;}
     div {text-align: center;}
     
@@ -19,6 +19,10 @@
     }
     .container  {
       text-align: center;
+    }
+    .form-group {
+        text-align: center;
+
     }
     </style>
 {% endblock %}
@@ -40,7 +44,7 @@
             <form method="POST" action="">
                 {{ form.hidden_tag() }}
                 <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Submit Dates</legend>
+                    <legend class="border-bottom mb-4">Enter Dates</legend>
                     <div class="row">
                     <div class="form-group col-sm-4">
                         {{ form.startdate.label(class="form-control-label") }}

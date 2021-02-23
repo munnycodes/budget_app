@@ -24,25 +24,23 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('start') }}">Dashboard</a>
             </li>
-            <li class="nav-item dropdown">
+            <!-- <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Expenses
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              </a> -->
+              <!-- <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="#">Add New Expense</a></li>
-                <li><a class="dropdown-item" href="#">View Existing Expenses</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Set Budget</a></li>
-              </ul>
+                <li><a class="dropdown-item" href="#">View Existing Expenses</a></li>
+              </ul> -->
             </li>
             <li class="nav-item">
-              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+              <a class="nav-link" href="{{ url_for('new_expense') }}">New Expense</a>
             </li>
             {% endif %}
           </ul>
           <div class="navbar-nav">
             {% if current_user.is_authenticated %}
-            <a class="nav-link" href="{{ url_for('new_expense') }}">New Expense</a>
             <a class="nav-link" href="{{ url_for('account') }}">Account</a>
             <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
             {% else %}

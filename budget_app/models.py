@@ -24,7 +24,6 @@ class Expense(db.Model):
     expense_type = db.Column(db.String(50), nullable=False)
     cost = db.Column(db.Integer, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) 
-
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
     def __repr__(self):
